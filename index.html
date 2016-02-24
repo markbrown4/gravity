@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Gravity</title>
+<style media="screen">
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
+canvas {
+  display: block;
+}
+</style>
+</head>
+<body>
+<canvas></canvas>
+<script src="vector.js"></script>
+<script>
+
+var canvas = document.querySelector('canvas')
+var ctx = canvas.getContext('2d')
+var width = window.innerWidth
+var midWidth = width / 2
+var height = window.innerHeight
+var midHeight = height / 2
+canvas.width = width
+canvas.height = height
+
+var earth = new Particle(
+  new Vector(midWidth - 200, midHeight), // point
+  new Vector(0, -5), // velocity
+  new Vector(0, 0) // acceleration)
+)
+
+var sun = new Field(
+  new Vector(midWidth, midHeight), // point
+  5000 // mass
+)
+
+function update() {
+  earth.submitToFields([sun])
+  earth.move()
+}
+
+function drawCircle(object, color, size) {
+  ctx.fillStyle = color
+  ctx.beginPath()
+  ctx.arc(object.position.x, object.position.y, size, 0, Math.PI * 2)
+  ctx.closePath()
+  ctx.fill()
+}
+
+function draw() {
+  drawCircle(sun, '#FDF336', 50)
+  drawCircle(earth, '#3787D2', 10)
+}
+
+function tick() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  update()
+  draw()
+  window.requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
